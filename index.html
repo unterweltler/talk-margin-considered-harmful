@@ -1,24 +1,213 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-		<title>reveal.js</title>
+		<title>Margin considered harmful</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="dist/reset.css" />
+		<link rel="stylesheet" href="dist/reveal.css" />
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme" />
 
 		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme" />
+
+		<style>
+			.legend {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+				padding: 1.5rem;
+				text-align: center;
+				font-size: 1.5rem;
+			}
+
+			.col2 {
+				display: flex;
+				text-align: left;
+                font-size: 0.6em;
+                line-height: 1.2em;
+				padding: 0 2rem;
+			}
+
+			.col2 > div {
+				flex: 1 1 50%;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<h2>Margin considered harmful</h2>
+					<p>Why we should ban outer margin from our Components / Design Systems</p>
+				</section>
+				<section>
+						<h2>Why? 🤔</h2>
+						<p><small>Tweets / Blogposts from Max Stoiber / Mark Dalgleish</small></p>
+						<ul>
+							<li class="fragment">breaks Component encapsulation</li>
+							<li class="fragment">makes reusability harder</li>
+							<li class="fragment">
+								conflicts with designers logic
+								<br />
+								<small>(yes, there are differences)</small>
+							</li>
+						</ul>
+						<aside class="notes">
+							<p>Max Stoiber - Creator of StyledComponents (CSS-in-JS)</p>
+							<p>Mark Dalgleish - Co-Creator of CSS Modules / Braid Design System</p>
+							<br />
+							<p>
+								Designers think about space in relation and context.
+								They define how far a component should be from another component in a specific instance.
+							</p>
+						</aside>
+				</section>
+				<section>
+					<h2>Context matters! 🔮</h2>
+				</section>
+				<section>
+					<h2>What can we do?</h2>
+					<img src="https://media.giphy.com/media/3o7TKTDn976rzVgky4/giphy.gif" alt="Thinking" />
+					<h3 class="fragment">Move responsibility!</h3>
+				</section>
+				<section>
+					<section>
+						<h3>Wrappers</h3>
+						<small>wrap Component(s) for specific context and add styles</small>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							```tsx [1-2|3-6|7-15]
+							// spacingCurve 40 - 56px
+							<div class="contentWrapper">
+								<div class="headline">
+									<h1>Catchy Title</h1>
+								</div>
+								<p>Lorem Ipsum dolor ...</p>
+								// adds margin-top 32px
+								<div class="cardGrid">
+									<Grid>
+										<GridItem>
+											<Card>Card 1</Card>
+										</GridItem>
+										...
+									</Grid>
+								</div>
+							</div>
+							```
+  						</textarea>
+					</section>
+					<section>
+						<div class="col2">
+							<div>
+								<p>Pros: ✅</p>
+								<ul>
+									<li>highly customisable</li>
+									<li>easily extendable</li>
+								</ul>
+							</div>
+							<div class="fragment">
+								<p>Cons: ❌</p>
+								<ul>
+									<li>more nested code</li>
+									<li>reduced reusability</li>
+									<li>maintainability (might) get harder by time</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Possible usecases</h3>
+						<ul>
+							<li>Typography</li>
+							<li>...</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Layout Components</h3>
+						<small>define helper Components which can be used instead of Styles</small>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							```tsx [1-2|3-4|5-6]
+							// spacingCurve 40 - 56px
+							<Burrito spacingCurve="giga">
+								<DynamicHeading titleLevel={1}>Catchy Title</DynamicHeading>
+								<Text>Lorem Ipsum dolor ...</Text>
+								// static space 32px
+								<Spacer size="zeta" />
+								<Grid>
+									<GridItem>
+										<Card>Card 1</Card>
+									</GridItem>
+									...
+								</Grid>
+							</Burrito>
+							```
+  						</textarea>
+					</section>
+					<section>
+						<div class="col2">
+							<div>
+								<p>Pros: ✅</p>
+								<ul>
+									<li>highly customisable</li>
+									<li>easily extendable</li>
+									<li>high reusability</li>
+								</ul>
+							</div>
+							<div class="fragment">
+								<p>Cons: ❌</p>
+								<ul>
+									<li>initial architecture / setup more time consuming</li>
+									<li>maintainability (might) get complicated over time</li>
+								</ul>
+							</div>
+						</div>
+						<aside class="notes">
+							<p>
+								You have to define space in relation and context.<br />
+								Who else thinks about space in relation and context? Designers.
+							</p>
+						</aside>
+					</section>
+					<section>
+						<h3>Possible usecases</h3>
+						<ul>
+							<li>Burrito 🌯</li>
+							<li>Spacer</li>
+							<li>Stack</li>
+							<li>Typography</li>
+							<li>...</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<h2>Credits</h2>
+					<p>
+						Max Stoiber<br />
+						<small>
+							<a href="https://twitter.com/mxstbr">@mxstbr</a><br />
+							<a href="https://mxstbr.com/thoughts/margin">https://mxstbr.com/thoughts/margin</a>
+						</small>
+					</p>
+					<p>
+						Mark Dalgleish<br />
+						<a href="https://twitter.com/markdalgleish"><small>@markdalgleish</small></a>
+					</p>
+				</section>
+				<section>
+					<img src="https://media.giphy.com/media/lTpme2Po0hkqI/giphy.gif" alt="The End" />
+				</section>
+				<section />
 			</div>
+			<div class="legend">16.11.2020 | Manuel Lieb | CoPFE Weekly</div>
 		</div>
 
 		<script src="dist/reveal.js"></script>
@@ -33,7 +222,7 @@
 				hash: true,
 
 				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+				plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
 			});
 		</script>
 	</body>
